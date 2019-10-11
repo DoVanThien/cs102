@@ -13,7 +13,9 @@ def is_prime(n: str) -> bool:
     """
     if n < 2:
         return False
-    if n > 3 and (n % 2 != 0 or n % 3 != 0):
+    elif n == 2 or n == 3:
+    	return True
+    elif n > 3 and (n % 2 != 0 or n % 3 != 0):
         return True
     else:
         return False
