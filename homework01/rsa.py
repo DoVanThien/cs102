@@ -1,9 +1,5 @@
-import random
-
-
-def is_prime(n: str) -> bool:
+def is_prime(n: int) -> bool:
     """
-    Tests to see if a number is prime.
     >>> is_prime(2)
     True
     >>> is_prime(11)
@@ -11,19 +7,16 @@ def is_prime(n: str) -> bool:
     >>> is_prime(8)
     False
     """
-    if n < 2:
+    if n == 1:
         return False
-    elif n == 2 or n == 3:
-    	return True
-    elif n > 3 and (n % 2 != 0 or n % 3 != 0):
-        return True
-    else:
-        return False
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True
 
 
 def gcd(a: int, b: int) -> int:
     """
-    Euclid's algorithm for determining the greatest common divisor.
     >>> gcd(12, 15)
     3
     >>> gcd(3, 7)
@@ -42,24 +35,13 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    f = []
-    w = phi
+    n = 1
     while True:
-        mas = []
-        mas.append(phi // e)
-        mas.append(0)
-        mas.append(0)
-        f.append(mas)
-        if phi % e == 0:
+        if ((n * phi) + 1) % e == 0:
             break
-        c = phi % e
-        phi = e
-        e = c
-    f[len(f) - 1][2] = 1
-    for i in range(len(f) - 1, 0, -1):
-        f[i - 1][2] = f[i][1] - f[i][2] * f[i - 1][0]
-        f[i - 1][1] = f[i][2]
-    return (f[0][2] + w) % w
+        n += 1
+    d = int(((n * phi) + 1) / e)
+    return d
 
 
 def generate_keypair(p: int, q: int) -> tuple:
@@ -79,7 +61,6 @@ def generate_keypair(p: int, q: int) -> tuple:
     while g != 1:
         e = random.randrange(1, phi)
         g = gcd(e, phi)
-
         # Use Extended Euclid's Algorithm to generate the private key
     d = multiplicative_inverse(e, phi)
     # Return public and private keypair
@@ -87,7 +68,7 @@ def generate_keypair(p: int, q: int) -> tuple:
     return ((e, n), (d, n))
 
 
-def encrypt(pk: int, plaintext: str) -> list:
+def encrypt(pk, plaintext):
     # Unpack the key into it's components
     key, n = pk
     # Convert each letter in the plaintext to numbers based on
@@ -97,7 +78,7 @@ def encrypt(pk: int, plaintext: str) -> list:
     return cipher
 
 
-def decrypt(pk: int, ciphertext: list) -> str:
+def decrypt(pk, ciphertext):
     # Unpack the key into its components
     key, n = pk
     # Generate the plaintext based on the ciphertext and key using a^b mod m
